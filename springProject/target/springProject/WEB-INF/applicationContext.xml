@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="userService" class="com.springapp.services.UserService"> </bean>
+
+
+    <bean id="serviceLocator" class="com.springapp.services.DefaultServiceLocator">
+        <!-- inject any dependencies required by this locator bean -->
+    </bean>
+    <bean id="clientService"
+          factory-bean="serviceLocator"
+          factory-method="createClientServiceInstance"/>
+    <bean id="accountService"
+          factory-bean="serviceLocator"
+          factory-method="createAccountServiceInstance"/>
+
+    <!-- constructor-based DI-->
+
+
+    <bean id="exampleBean" class="com.springapp.services.ExampleBean">
+        <constructor-arg type="int" value="7500000"/>
+        <constructor-arg type="java.lang.String" value="42"/>
+    </bean>
+
+
+    <!--
+    <bean id="exampleBean" class="examples.ExampleBean">
+        <constructor-arg index="0" value="7500000"/>
+        <constructor-arg index="1" value="42"/>
+    </bean> -->
+
+
+    <!-- setter-based DI -->
+
+    <bean id="exampleBeanTwo" class="com.springapp.services.ExampleBeanSetterDI">
+        <!-- setter injection using the nested ref element -->
+        <property name="beanOne">
+            <ref bean="anotherExampleBean"/>
+        </property>
+
+        <!-- setter injection using the neater ref attribute -->
+        <property name="beanTwo" ref="yetAnotherBean"/>
+        <property name="integerProperty" value="1"/>
+    </bean>
+
+    <bean id="anotherExampleBean" class="com.springapp.services.AccountService"/>
+    <bean id="yetAnotherBean" class="com.springapp.services.ClientService"/>
+
+</beans>
